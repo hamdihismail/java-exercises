@@ -16,6 +16,18 @@ public class CustomException {
     //    calls super(message), and stores the amount
     //  - Have a getter: double getAmount()
     //  Define it as a static inner class here, or as a separate class in this package.
+    static class InsufficientFundsException extends Exception{
+        private final double amount;
+
+        public double getAmount() {
+            return amount;
+        }
+
+        InsufficientFundsException(String message, double amount) {
+            super(message);
+            this.amount = amount;
+        }
+    }
 
 
     // TODO: 2 - Create a custom UNCHECKED exception class called InvalidAgeException.
@@ -26,6 +38,15 @@ public class CustomException {
     //    and calls super(message, cause)
     //  Define it as a static inner class here.
 
+    static class InvalidAgeException extends RuntimeException{
+        InvalidAgeException(String message){
+            super(message);
+        }
+        InvalidAgeException(String message, Throwable cause){
+            super(message,cause);
+        }
+    }
+
 
     // TODO: 3 - Create a static inner class BankAccount with:
     //  - A private double 'balance' field
@@ -35,11 +56,35 @@ public class CustomException {
     //    message and the shortfall amount (amount - balance).
     //    Otherwise, subtract amount from balance.
     //  - A method: double getBalance()
+    static class BankAccount{
+        private double balance;
+
+        public double getBalance() {
+            return balance;
+        }
+
+        BankAccount(double balance){
+            this.balance = balance;
+        }
+
+        public void withdraw(double amount) throws InsufficientFundsException{
+            if(amount > balance){
+                throw new InsufficientFundsException("Amount requested exceeds balance!",(amount - balance));
+            }
+            balance -= amount;
+        }
+    }
 
 
     // TODO: 4 - Create a static method: void validateAge(int age)
     //  If age < 0 or age > 150, throw a new InvalidAgeException with an appropriate message.
     //  Otherwise, print "Age " + age + " is valid."
+    static void validateAge(int age){
+        if(age < 0 || age > 150){
+            throw  new InvalidAgeException("Age entered is invalid!");
+        }
+        System.out.println("Age " + age + " is valid.");
+    }
 
 
     public static void main(String[] args) {
@@ -50,6 +95,27 @@ public class CustomException {
         //  Catch the exception and print its message and the shortage amount.
         //  Also try validateAge with valid (25) and invalid (-5) values,
         //  catching InvalidAgeException.
+        BankAccount bankAccount = new BankAccount(100);
+        try {
+            bankAccount.withdraw(50);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        try {
+            bankAccount.withdraw(75);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        try {
+            validateAge(25);
+        } catch (InvalidAgeException e){
+            System.out.println(e.getMessage());
+        }
+        try {
+            validateAge(-5);
+        } catch (InvalidAgeException e){
+            System.out.println(e.getMessage());
+        }
 
 
         System.out.println("\n=== Exception Chaining ===");
@@ -61,6 +127,15 @@ public class CustomException {
         //  In an outer try-catch, catch the InvalidAgeException and print:
         //  - The exception message
         //  - The cause (using getCause())
+        try {
+            try {
+                Integer.parseInt("abc");
+            } catch (NumberFormatException e){
+                throw new InvalidAgeException(e.getMessage(),e.initCause(e.getCause()));
+            }
+        } catch (InvalidAgeException e){
+            System.out.println("Message: "+e.getMessage()+"\nCause: "+e.getCause());
+        }
 
     }
 }
