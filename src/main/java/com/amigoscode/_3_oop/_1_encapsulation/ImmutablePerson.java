@@ -19,45 +19,79 @@ public final class ImmutablePerson {
     //   - name (String)
     //   - age (int)
     //   - email (String)
-
+    private String name, email;
+    private int age;
 
     // TODO: 2 - Create a constructor that takes name, age, and email
     //   and assigns them to the fields. Since the fields are final,
     //   they can only be set here.
 
+    ImmutablePerson(String name, int age, String email){
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
 
     // TODO: 3 - Create getter methods for all three fields:
     //   getName(), getAge(), getEmail().
     //   Do NOT create any setter methods — this class is immutable.
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getAge() {
+        return age;
+    }
 
 
     // TODO: 4 - Create a withName(String newName) method that returns
     //   a NEW ImmutablePerson with the changed name but the same
     //   age and email. The original object must remain unchanged.
 
+    public ImmutablePerson withName(String newName){
+        return new ImmutablePerson(newName,this.age, this.email);
+    }
+
 
     // TODO: 5 - Create a withAge(int newAge) method that returns
     //   a NEW ImmutablePerson with the changed age but the same
     //   name and email. The original object must remain unchanged.
 
+    public ImmutablePerson withAge(int newAge){
+        return new ImmutablePerson(this.name,newAge,this.email);
+    }
 
     // TODO: 6 - Override toString() to return a string in the format:
     //   "ImmutablePerson{name='XXX', age=XXX, email='XXX'}"
 
 
+    @Override
+    public String toString() {
+        return "ImmutablePerson{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
     public static void main(String[] args) {
         // Uncomment and test after completing the TODOs:
-        // ImmutablePerson person = new ImmutablePerson("Alice", 30, "alice@example.com");
-        // System.out.println(person);
-        //
-        // // withName returns a NEW object — original is unchanged
-        // ImmutablePerson renamed = person.withName("Bob");
-        // System.out.println("Original: " + person);
-        // System.out.println("Renamed:  " + renamed);
-        //
-        // // withAge returns a NEW object — original is unchanged
-        // ImmutablePerson aged = person.withAge(31);
-        // System.out.println("Original: " + person);
-        // System.out.println("Aged:     " + aged);
+         ImmutablePerson person = new ImmutablePerson("Alice", 30, "alice@example.com");
+         System.out.println(person);
+
+         // withName returns a NEW object — original is unchanged
+         ImmutablePerson renamed = person.withName("Bob");
+         System.out.println("Original: " + person);
+         System.out.println("Renamed:  " + renamed);
+
+         // withAge returns a NEW object — original is unchanged
+         ImmutablePerson aged = person.withAge(31);
+         System.out.println("Original: " + person);
+         System.out.println("Aged:     " + aged);
     }
 }
